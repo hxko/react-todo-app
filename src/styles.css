@@ -1,0 +1,206 @@
+:root {
+  --bg-primary: rgb(240, 240, 240);
+  --text-color: #333;
+  --primary-color: hsl(200, 100%, 50%);
+  --alert-color: #FF5A5A;
+  --success-color: #3CB371;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light-mode) {
+    --bg-primary: #333;
+    --text-color: #E6E6E6;
+  }
+}
+
+.dark-mode {
+  --bg-primary: #333;
+  --text-color: #E6E6E6;
+}
+
+
+.success {
+  color: var(--success-color);
+}
+
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-color);
+  max-width: 400px;
+  padding: 1rem;
+  margin: 0 auto;
+  transition: background-color 0.5s ease;
+}
+
+.new-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn {
+  background: hsla(200, 100%, 50%, 0.1);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.5em 0.5em;
+  border-radius: 0.25em;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: hsla(200, 100%, 50%, 0.2);
+}
+
+.new-item-form input {
+  outline: none;
+  border: 1px solid hsl(200, 100%, 40%);
+  background: hsl(200, 100%, 30%);
+  border-radius: 0.25em;
+  padding: 0.6em 0.5em;
+  color: hsl(200, 100%, 90%);
+}
+
+.new-item-form input::placeholder {
+  color: inherit;
+}
+
+.new-item-form input:focus {
+  border: 1px solid hsl(200, 100%, 70%);
+}
+
+.header {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* NEW */
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--text-color);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  cursor: pointer;
+  word-break: break-all;
+}
+
+.todo-item.completed {
+  border: 1px solid var(--success-color);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  user-select: none;
+  min-width: 50px;
+  /* min-width ensures that the empty title remains clickable */
+}
+
+
+.checkbox {
+  margin-right: 10px;
+  display: flex;
+}
+
+.checkbox.completed {
+  color: var(--success-color);
+}
+
+.delete-icon {
+  display: flex;
+  margin-left: 7px;
+}
+
+.delete-icon:hover {
+  color: var(--alert-color);
+}
+
+.edit-icon {
+  display: flex;
+  margin-left: 7px;
+}
+
+.edit-icon:hover,
+.cancel-icon:hover {
+  color: var(--primary-color);
+}
+
+.cancel-icon {
+  display: flex;
+  margin-left: auto;
+}
+
+/* Apply hover effect to todo-item when hovering over delete icon */
+.todo-item:has(.delete-icon:hover) {
+  border: 1px dashed var(--alert-color);
+}
+
+.drag-over {
+  background-color: #6d66664d;
+  border: 2px dashed #6D6666 !important;
+}
+
+/* prevent the title & icons (while dragging over the todo-item) from receiving mouse events
+ to prevent flickering  */
+.todo-item.drag-over .checkbox,
+.todo-item.drag-over .delete-icon,
+.todo-item.drag-over .title,
+.todo-item.drag-over .edit-icon {
+  pointer-events: none;
+}
+
+/* react-toggle gray */
+.react-toggle--checked.toggle-gray .react-toggle-track,
+.react-toggle--checked.toggle-gray:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: #4D4D4D;
+}
+
+.react-toggle--checked.toggle-gray .react-toggle-thumb {
+  border-color: gray;
+}
+
+.react-toggle.toggle-gray:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: gray;
+}
+
+/* contentedidable */
+.title:focus-visible {
+  text-decoration: underline;
+  outline: none;
+  /* Remove default outline */
+}
