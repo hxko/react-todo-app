@@ -3,14 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://hxko.github.io/react-todo-app",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@types/uuid": "^9.0.8",
+    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.7",
     "react-dom": "^18.2.0",
