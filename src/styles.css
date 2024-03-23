@@ -1,20 +1,26 @@
 :root {
-  --bg-primary: rgb(240, 240, 240);
+  --bg-primary: linear-gradient(rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.9)), url("img\AbstractLight_byHeikoSohn.jpg");
   --text-color: #333;
   --primary-color: hsl(200, 100%, 50%);
   --alert-color: #FF5A5A;
   --success-color: #3CB371;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   body:not(.light-mode) {
     --bg-primary: #333;
     --text-color: #E6E6E6;
   }
+} */
+
+html {
+  min-height: 100%;
 }
 
 .dark-mode {
-  --bg-primary: #333;
+  --bg-primary: linear-gradient(rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.6)), url("img\AbstractLight_byHeikoSohn.jpg");
   --text-color: #E6E6E6;
 }
 
@@ -30,6 +36,7 @@
 
 body {
   background: var(--bg-primary);
+  background-size: cover;
   color: var(--text-color);
   max-width: 400px;
   padding: 1rem;
