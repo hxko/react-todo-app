@@ -154,31 +154,29 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   };
 
   const handleSwipe = () => {
-    // Handle swipe action here, for example, delete the todo item
-    console.log('Swiped!');
-    // Add CSS Animation
-    // Get the todo item element
-    const todoItem = document.querySelector('.todo-item');
-    // Add the animation class to the todo item
-    if (todoItem) {
-      todoItem.classList.add('swipe-animation');
-      // Listen for the animationend event
-      todoItem.addEventListener('animationend', () => {
-        // Remove the animation class when the animation ends
-        todoItem.classList.remove('swipe-animation');
-        handleDelete();
-      }, { once: true }); // Use once option to ensure the listener is removed after the animation ends
+    // Check if dragging is in progress
+    if (!isDraggingRef.current) {
+      // Handle swipe action only if not dragging
+      console.log('Swiped!');
+      const todoItem = document.querySelector('.todo-item');
+      if (todoItem) {
+        todoItem.classList.add('swipe-animation');
+        todoItem.addEventListener('animationend', () => {
+          todoItem.classList.remove('swipe-animation');
+          handleDelete();
+        }, { once: true });
+      }
     }
+  };
 
-  }
-
-  // Conditionally set trackTouch and trackMouse based on whether dragging is in progress
   const swipeHandlers = useSwipeable({
     onSwipedRight: handleSwipe,
-    trackTouch: !isDraggingRef.current, // Disable touch tracking when dragging is in progress
-    trackMouse: !isDraggingRef.current, // Disable mouse tracking when dragging is in progress
+    trackMouse: true,
+    swipeDuration: 250,
     delta: 30, // Tweak the delta value if needed
   });
+
+
 
   return (
     <div
