@@ -36,17 +36,20 @@ body {
   background: url("img\AbstractLight_byHeikoSohn.jpg");
   background-size: cover;
   color: var(--text-color);
-  max-width: 400px;
   padding: 1rem;
   margin: 0 auto;
   transition: background-color 0.5s ease;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 main {
   padding: 20px;
   border-radius: 0.5em;
   background: var(--bg-primary);
+  min-width: 350px;
+  max-width: 500px;
 }
 
 .new-item-form {
@@ -127,7 +130,7 @@ main {
   margin-bottom: 10px;
   width: 100%;
   cursor: pointer;
-  word-break: break-all;
+
   position: relative;
 }
 
@@ -167,6 +170,8 @@ main {
   align-items: center;
   width: 100%;
   user-select: none;
+  overflow-wrap: anywhere;
+  ;
 
   .drag-icon svg {
     width: 100%;
