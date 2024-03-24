@@ -1,6 +1,5 @@
 :root {
-  --bg-primary: rgba(255, 255, 255, 0.9);
-
+  --bg-primary: rgba(255, 255, 255, 1);
   --text-color: #333;
   --primary-color: hsl(200, 100%, 50%);
   --alert-color: #FF5A5A;
@@ -19,7 +18,7 @@ html {
 }
 
 .dark-mode {
-  --bg-primary: rgba(0, 0, 0, 0.5);
+  --bg-primary: rgba(0, 0, 0, 0.8);
   --text-color: #E6E6E6;
 }
 
@@ -147,6 +146,10 @@ main {
   height: 100%;
   width: 20px;
   padding-left: 5px;
+}
+
+.drag-icon:hover {
+  fill: var(--primary-color);
 }
 
 
