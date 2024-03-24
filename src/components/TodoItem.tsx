@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { TodoItemTypes } from "../types/TodoItemTypes";
 import { useTodoContext } from "../context/TodoContext";
-import { RiCheckboxBlankCircleLine, RiCheckboxCircleFill, RiDeleteBinLine, RiEdit2Line, RiCloseLine } from 'react-icons/ri';
+import { RiCheckboxBlankCircleLine, RiCheckboxCircleFill, RiDeleteBinLine, RiEdit2Line, RiCloseLine, RiDraggable } from 'react-icons/ri';
 import ReactContentEditable from 'react-contenteditable';
 import { ContentEditableEvent } from 'react-contenteditable';
+import { useSwipeable } from 'react-swipeable';
 
 const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
 
@@ -14,10 +15,7 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   const [isDraggingOver, setIsDraggingOver] = useState(false);   // Drag & Drop
   const [isEditing, setIsEditing] = useState<boolean>(false);   // Handle EDITING title
   const isCancelIconClickedRef = useRef(false);
-
-  useEffect(() => {
-    editedTitleRef.current = title;
-  }, [title]);
+  const isDraggingRef = useRef(false);
 
   const handleEditStart = () => {
     setIsEditing(true);
@@ -105,8 +103,15 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   // DRAG & DROP
   // Function to handle the start of dragging a todo item
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    isDraggingRef.current = true;
     // Set the data to be transferred during the drag operation
     e.dataTransfer.setData("text/plain", id);
+    setIsDraggingOver(true); // Assuming you want to show a visual indication during dragging
+  };
+
+  // Function to handle the end of dragging
+  const handleDragEnd = () => {
+    isDraggingRef.current = false;
   };
 
   // Function to handle dragging over a droppable area
@@ -148,16 +153,47 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
     e.stopPropagation();
   };
 
+  const handleSwipe = () => {
+    // Handle swipe action here, for example, delete the todo item
+    console.log('Swiped!');
+    // Add CSS Animation
+    // Get the todo item element
+    const todoItem = document.querySelector('.todo-item');
+    // Add the animation class to the todo item
+    if (todoItem) {
+      todoItem.classList.add('swipe-animation');
+      // Listen for the animationend event
+      todoItem.addEventListener('animationend', () => {
+        // Remove the animation class when the animation ends
+        todoItem.classList.remove('swipe-animation');
+        handleDelete();
+      }, { once: true }); // Use once option to ensure the listener is removed after the animation ends
+    }
+
+  }
+
+  // Conditionally set trackTouch and trackMouse based on whether dragging is in progress
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: handleSwipe,
+    trackTouch: !isDraggingRef, // Disable touch tracking when dragging is in progress
+    trackMouse: !isDraggingRef, // Disable mouse tracking when dragging is in progress
+    delta: 30, // Tweak the delta value if needed
+  });
+
   return (
     <div
       className={`todo-item ${completed ? 'completed' : ''} ${isDraggingOver ? 'drag-over' : ''}`}
-      draggable
-      onDragStart={handleDragStart}
+      draggable={isDraggingRef.current}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleSingleClick}
+      onDragEnd={handleDragEnd}
+      {...swipeHandlers}
     >
+      <div draggable={true} onDragStart={handleDragStart}>
+        <RiDraggable className="drag-icon" title="Drag Me" />
+      </div>
       <div className={`checkbox ${completed ? 'completed' : ''}`} onDragOver={handleInnerDragOver}>
         {completed ? <RiCheckboxCircleFill /> : <RiCheckboxBlankCircleLine />}
       </div>

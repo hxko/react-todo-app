@@ -1,6 +1,6 @@
 :root {
-  --bg-primary: linear-gradient(rgba(255, 255, 255, 0.9),
-      rgba(255, 255, 255, 0.9)), url("img\AbstractLight_byHeikoSohn.jpg");
+  --bg-primary: rgba(255, 255, 255, 0.9);
+
   --text-color: #333;
   --primary-color: hsl(200, 100%, 50%);
   --alert-color: #FF5A5A;
@@ -19,8 +19,7 @@ html {
 }
 
 .dark-mode {
-  --bg-primary: linear-gradient(rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.6)), url("img\AbstractLight_byHeikoSohn.jpg");
+  --bg-primary: rgba(0, 0, 0, 0.5);
   --text-color: #E6E6E6;
 }
 
@@ -35,13 +34,20 @@ html {
 }
 
 body {
-  background: var(--bg-primary);
+  background: url("img\AbstractLight_byHeikoSohn.jpg");
   background-size: cover;
   color: var(--text-color);
   max-width: 400px;
   padding: 1rem;
   margin: 0 auto;
   transition: background-color 0.5s ease;
+  overflow-x: hidden;
+}
+
+main {
+  padding: 20px;
+  border-radius: 0.5em;
+  background: var(--bg-primary);
 }
 
 .new-item-form {
@@ -116,26 +122,31 @@ body {
 .todo-item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 10px 10px 10px 25px;
   border: 1px solid var(--text-color);
   border-radius: 5px;
   margin-bottom: 10px;
   width: 100%;
   cursor: pointer;
   word-break: break-all;
+  position: relative;
+}
+
+.dark-mode .todo-item {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .todo-item.completed {
   border: 1px solid var(--success-color);
 }
 
-.title {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  user-select: none;
-  min-width: 50px;
-  /* min-width ensures that the empty title remains clickable */
+.drag-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20px;
+  padding-left: 5px;
 }
 
 
@@ -146,6 +157,23 @@ body {
 
 .checkbox.completed {
   color: var(--success-color);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  user-select: none;
+
+  .drag-icon svg {
+    width: 100%;
+    /* Ensure the SVG icon fills the entire width of the container */
+    height: auto;
+    /* Maintain aspect ratio */
+  }
+
+  min-width: 50px;
+  /* min-width ensures that the empty title remains clickable */
 }
 
 .delete-icon {
@@ -210,4 +238,22 @@ body {
   text-decoration: underline;
   outline: none;
   /* Remove default outline */
+}
+
+
+/* Swipe animation */
+@keyframes swipeAnimation {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+}
+
+.swipe-animation {
+  animation: swipeAnimation 0.3s ease forwards;
 }
