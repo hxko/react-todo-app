@@ -175,8 +175,8 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   // Conditionally set trackTouch and trackMouse based on whether dragging is in progress
   const swipeHandlers = useSwipeable({
     onSwipedRight: handleSwipe,
-    trackTouch: !isDraggingRef, // Disable touch tracking when dragging is in progress
-    trackMouse: !isDraggingRef, // Disable mouse tracking when dragging is in progress
+    trackTouch: !isDraggingRef.current, // Disable touch tracking when dragging is in progress
+    trackMouse: !isDraggingRef.current, // Disable mouse tracking when dragging is in progress
     delta: 30, // Tweak the delta value if needed
   });
 
