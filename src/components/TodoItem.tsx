@@ -172,6 +172,7 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   const swipeHandlers = useSwipeable({
     onSwipedRight: handleSwipe,
     trackMouse: true,
+    trackTouch: true,
     swipeDuration: 250,
     delta: 30, // Tweak the delta value if needed
   });

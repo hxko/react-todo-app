@@ -48,7 +48,8 @@ main {
   padding: 20px;
   border-radius: 0.5em;
   background: var(--bg-primary);
-  min-width: 350px;
+  min-width: 300px;
+  width: 95svw;
   max-width: 500px;
 }
 
