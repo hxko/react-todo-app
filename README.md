@@ -1,4 +1,4 @@
-Learnig React component structures by building a simple Todo-App
+Learn React component structures & Typescript by building a simple Todo-App
 
 Features:
 - Local Storage
