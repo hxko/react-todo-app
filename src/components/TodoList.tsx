@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TodoItem from './TodoItem';
 import { useTodoContext } from '../context/TodoContext';
 import TodoFilter, { FilterType } from './TodoFilter';
