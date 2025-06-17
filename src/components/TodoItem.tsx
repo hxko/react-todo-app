@@ -2,30 +2,32 @@ import { useState, useRef, useEffect } from 'react';
 import { TodoItemTypes } from "../types/TodoItemTypes";
 import { useTodoContext } from "../context/TodoContext";
 import { RiCheckboxBlankCircleLine, RiCheckboxCircleFill, RiDeleteBinLine, RiEdit2Line, RiCloseLine, RiDraggable } from 'react-icons/ri';
-import ReactContentEditable from 'react-contenteditable';
-import { ContentEditableEvent } from 'react-contenteditable';
+import ReactContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useSwipeable } from 'react-swipeable';
 
 const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
-
-  const { todos, setTodos } = useTodoContext();   // TODOS
-  const [clickTimer, setClickTimer] = useState<number | undefined>();  // distinguish between single and doubleClick
-  const titleRef = useRef<HTMLDivElement>(null);   // contenteditable title
-  const editedTitleRef = useRef<string>(title);   // edited title ref
-  const [isDraggingOver, setIsDraggingOver] = useState(false);   // Drag & Drop
-  const [isEditing, setIsEditing] = useState<boolean>(false);   // Handle EDITING title
+  const { todos, setTodos } = useTodoContext();
+  const [clickTimer, setClickTimer] = useState<number | undefined>();
+  const titleRef = useRef<HTMLDivElement>(null);
+  const editedTitleRef = useRef<string>(title);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const isCancelIconClickedRef = useRef(false);
   const isDraggingRef = useRef(false);
 
-  const handleEditStart = () => {
-    setIsEditing(true);
-  };
+  // State for fade-in and fade-out animations
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fade-in effect on mount
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   // Focus title when edit icon is clicked
   useEffect(() => {
     if (isEditing && titleRef.current) {
       titleRef.current.focus();
-      // Set the cursor position to the end of the text
       const range = document.createRange();
       const selection = window.getSelection();
       range.selectNodeContents(titleRef.current);
@@ -37,6 +39,10 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
     }
   }, [isEditing]);
 
+  const handleEditStart = () => {
+    setIsEditing(true);
+  };
+
   const handleTitleChange = (e: ContentEditableEvent) => {
     editedTitleRef.current = e.target.value;
   };
@@ -44,7 +50,6 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   const handleEditSave = () => {
     const updatedTodos = todos.map(todo => {
       if (todo.id === id) {
-        console.log("save:", editedTitleRef.current)
         return { ...todo, title: editedTitleRef.current };
       }
       return todo;
@@ -54,9 +59,8 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   };
 
   const handleCancelEdit = () => {
-    console.log("cancel:")
     setIsEditing(false);
-    editedTitleRef.current = title
+    editedTitleRef.current = title;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -75,7 +79,6 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
       }
       return todo;
     });
-    // fallback if no id matches
     setTodos(updatedTodos);
   };
 
@@ -84,88 +87,72 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
     if (clickTimer) {
       clearTimeout(clickTimer);
       setClickTimer(undefined);
-      // Double click occurred, do nothing (edit action will be handled separately)
     } else {
-      // Single click occurred, trigger handleToggle after a delay
       const timer = setTimeout(() => {
         handleToggle();
         setClickTimer(undefined);
-      }, 200); // Adjust this delay as needed
+      }, 200);
       setClickTimer(timer);
     }
   };
 
-  // Function to delete a todo item
-  const handleDelete = () => {
-    setTodos(todos.filter(todo => todo.id !== id));
+
+
+  // Remove the todo after the fade-out animation completes
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (isDeleting && e.propertyName === 'opacity') {
+      setTodos(todos.filter(todo => todo.id !== id));
+    }
   };
 
   // DRAG & DROP
-  // Function to handle the start of dragging a todo item
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     isDraggingRef.current = true;
-    // Set the data to be transferred during the drag operation
     e.dataTransfer.setData("text/plain", id);
-    setIsDraggingOver(true); // Assuming you want to show a visual indication during dragging
+    setIsDraggingOver(true);
   };
 
-  // Function to handle the end of dragging
   const handleDragEnd = () => {
     isDraggingRef.current = false;
   };
 
-  // Function to handle dragging over a droppable area
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDraggingOver(true);
   };
 
-  // Function to handle leaving a droppable area
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsDraggingOver(false);
   };
 
-  // Function to handle dropping a dragged item
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    // Prevent default behavior of the drop event
     e.preventDefault();
-    // Reset the dragging state
     setIsDraggingOver(false);
-    // Get the id of the dropped item
     const droppedItemId = e.dataTransfer.getData("text/plain");
-    // Find the indexes of the dragged and dropped items
     const draggedItemIndex = todos.findIndex(todo => todo.id === droppedItemId);
     const droppedItemIndex = todos.findIndex(todo => todo.id === id);
-    // Create a copy of the todos array
     const updatedTodos = [...todos];
-    // Remove the dragged item from its original position
     const [draggedItem] = updatedTodos.splice(draggedItemIndex, 1);
-    // Insert the dragged item at the dropped position
     updatedTodos.splice(droppedItemIndex, 0, draggedItem);
-    // Update the todos state with the new order
     setTodos(updatedTodos);
   };
 
-  // prevent flickering for child elements
-  const handleInnerDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+
+  // REVIEW
+  // const handleInnerDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  // };
+
+  // Function to delete a todo item
+  const handleDelete = () => {
+    setIsDeleting(true); // Start fade-out animation
   };
 
   const handleSwipe = () => {
-    // Check if dragging is in progress
     if (!isDraggingRef.current) {
-      // Handle swipe action only if not dragging
-      console.log('Swiped!');
-      const todoItem = document.querySelector('.todo-item');
-      if (todoItem) {
-        todoItem.classList.add('swipe-animation');
-        todoItem.addEventListener('animationend', () => {
-          todoItem.classList.remove('swipe-animation');
-          handleDelete();
-        }, { once: true });
-      }
+      handleDelete();
     }
   };
 
@@ -174,30 +161,34 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
     trackMouse: true,
     trackTouch: true,
     swipeDuration: 250,
-    delta: 30, // Tweak the delta value if needed
+    delta: 30,
   });
-
-
 
   return (
     <div
-      className={`todo-item ${completed ? 'completed' : ''} ${isDraggingOver ? 'drag-over' : ''}`}
+      className={`todo-item ${completed ? 'completed' : ''} ${isDraggingOver ? 'drag-over' : ''} ${isVisible ? 'fade-in' : ''} ${isDeleting ? 'fade-out' : ''}`}
       draggable={isDraggingRef.current}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleSingleClick}
       onDragEnd={handleDragEnd}
+      onTransitionEnd={handleTransitionEnd} // Listen for transition end
       {...swipeHandlers}
     >
-      <div draggable={true} onDragStart={handleDragStart}>
+      <div
+        draggable={true}
+        onDragStart={handleDragStart}
+      //onDragOver={handleInnerDragOver} // Attach here to prevent flickering
+      >
         <RiDraggable className="drag-icon" title="Drag Me" />
       </div>
-      <div className={`checkbox ${completed ? 'completed' : ''}`} onDragOver={handleInnerDragOver}>
+      <div className={`checkbox ${completed ? 'completed' : ''}`}>
         {completed ? <RiCheckboxCircleFill /> : <RiCheckboxBlankCircleLine />}
       </div>
 
       <ReactContentEditable
+        title="Double click to edit"
         innerRef={titleRef}
         html={editedTitleRef.current}
         onChange={handleTitleChange}
@@ -209,15 +200,14 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
           if (!isCancelIconClickedRef.current) {
             handleEditSave();
           }
-          isCancelIconClickedRef.current = false; // Reset the flag
+          isCancelIconClickedRef.current = false;
         }}
         onKeyDown={handleKeyPress}
       />
-      {isEditing &&
+      {isEditing && (
         <div
           className="cancel-icon"
-          onDragOver={handleInnerDragOver}
-          onMouseDown={(e) => { e.preventDefault(); isCancelIconClickedRef.current = true }} // prevent onBlur to be fired before onClick
+          onMouseDown={(e) => { e.preventDefault(); isCancelIconClickedRef.current = true; }}
           onClick={(e) => {
             e.stopPropagation();
             handleCancelEdit();
@@ -226,17 +216,15 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
         >
           <RiCloseLine />
         </div>
-      }
+      )}
 
       <div className="edit-icon"
-        onDragOver={handleInnerDragOver}
-        onClick={(e) => { e.stopPropagation(); handleEditStart() }}
+        onClick={(e) => { e.stopPropagation(); handleEditStart(); }}
         title="Edit"
       >
         <RiEdit2Line />
       </div>
       <div className="delete-icon"
-        onDragOver={handleInnerDragOver}
         onClick={(e) => { e.stopPropagation(); handleDelete(); }}
         title="Delete"
       >
@@ -244,6 +232,7 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
       </div>
     </div>
   );
+
 };
 
 export default TodoItem;
