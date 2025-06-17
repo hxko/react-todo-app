@@ -105,8 +105,7 @@ main {
 .new-item-form input:focus {
   border: 1px solid var(--text-color);
   /* Use text color on focus */
-  background: color-mix(in srgb, var(--primary-color) 95%, white);
-  /* Slightly lighter background on focus */
+
 }
 
 /* Dark mode styles for input fields */
@@ -120,7 +119,7 @@ main {
 
 /* Button styles */
 .btn {
-  background: var(--bg-secondary);
+  background: color-mix(in srgb, var(--bg-primary) 40%, var(--primary-color));
   border: 1px solid var(--primary-color);
   color: var(--text-color);
   /* Use text color for button text */
@@ -132,7 +131,7 @@ main {
 
 .btn:hover,
 .btn:focus-visible {
-  background: hsla(200, 100%, 50%, 0.2);
+  background: color-mix(in srgb, var(--bg-primary) 50%, var(--primary-color));
 }
 
 /* List styles */
