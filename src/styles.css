@@ -1,40 +1,46 @@
 :root {
-  --bg-primary: rgba(255, 255, 255, 1);
-  --text-color: #333;
-  --primary-color: hsl(200, 100%, 50%);
+  --primary-color: hsl(120, 6%, 46%);
+  --bg-primary: color-mix(in srgb, var(--primary-color) 20%, white);
+  --bg-secondary: linear-gradient(135deg,
+      color-mix(in srgb, var(--primary-color) 40%, white) 0%,
+      color-mix(in srgb, var(--primary-color) 60%, black) 100%);
+  --text-color: color-mix(in srgb, var(--primary-color) 50%, black);
+  /* Mix for optimal contrast */
   --alert-color: #FF5A5A;
   --success-color: #3CB371;
+  --font-family: ;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  body:not(.light-mode) {
-    --bg-primary: #333;
-    --text-color: #E6E6E6;
-  }
-} */
+/* Dark mode styles */
+.dark-mode {
+  --bg-primary: color-mix(in srgb, var(--primary-color) 20%, black);
+  --bg-secondary: linear-gradient(135deg,
+      color-mix(in srgb, var(--primary-color) 40%, black) 0%,
+      color-mix(in srgb, var(--primary-color) 60%, black) 100%);
+  --text-color: color-mix(in srgb, var(--primary-color) 50%, white);
+  /* Light text for dark backgrounds */
+}
 
+
+/* Global styles */
 html {
   min-height: 100%;
 }
 
-.dark-mode {
-  --bg-primary: rgba(0, 0, 0, 0.8);
-  --text-color: #E6E6E6;
-}
-
-
-.success {
-  color: var(--success-color);
-}
-
 * {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family, Arial, sans-serif);
   box-sizing: border-box;
 }
 
 body {
-  background: url("img\AbstractLight_byHeikoSohn.jpg");
-  background-size: cover;
+  font-family:
+    'Roboto',
+    'Helvetica Neue',
+    'Segoe UI',
+    'Arial',
+    sans-serif;
+  /* Fallback to sans-serif */
+  background: var(--bg-secondary);
   color: var(--text-color);
   padding: 1rem;
   margin: 0 auto;
@@ -42,17 +48,31 @@ body {
   overflow-x: hidden;
   display: flex;
   justify-content: center;
+  font-size: 16px;
 }
 
+/* Main container */
 main {
   padding: 20px;
   border-radius: 0.5em;
   background: var(--bg-primary);
   min-width: 300px;
   width: 95svw;
+
   max-width: 500px;
 }
 
+/* Additional styles remain unchanged */
+
+
+/* Header */
+.header {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Form styles */
 .new-item-form {
   display: flex;
   flex-direction: column;
@@ -65,10 +85,45 @@ main {
   gap: 1rem;
 }
 
+.new-item-form input {
+  outline: none;
+  border: 1px solid var(--text-color);
+  /* Use text color for border */
+  border-radius: 0.25em;
+  padding: 0.6em 0.5em;
+  color: var(--text-color);
+  /* Use text color for input text */
+  background: color-mix(in srgb, var(--primary-color) 30%, white);
+  /* Light pastel background based on primary color */
+}
+
+.new-item-form input::placeholder {
+  color: var(--text-color);
+  /* Use text color for placeholder */
+}
+
+.new-item-form input:focus {
+  border: 1px solid var(--text-color);
+  /* Use text color on focus */
+  background: color-mix(in srgb, var(--primary-color) 95%, white);
+  /* Slightly lighter background on focus */
+}
+
+/* Dark mode styles for input fields */
+.dark-mode .new-item-form input {
+  background: color-mix(in srgb, var(--primary-color) 40%, black);
+  /* Darker background in dark mode */
+  border: 1px solid var(--text-color);
+  /* Keep border color consistent */
+}
+
+
+/* Button styles */
 .btn {
-  background: hsla(200, 100%, 50%, 0.1);
+  background: var(--bg-secondary);
   border: 1px solid var(--primary-color);
-  color: var(--primary-color);
+  color: var(--text-color);
+  /* Use text color for button text */
   padding: 0.5em 0.5em;
   border-radius: 0.25em;
   cursor: pointer;
@@ -80,36 +135,11 @@ main {
   background: hsla(200, 100%, 50%, 0.2);
 }
 
-.new-item-form input {
-  outline: none;
-  border: 1px solid hsl(200, 100%, 40%);
-  background: hsl(200, 100%, 30%);
-  border-radius: 0.25em;
-  padding: 0.6em 0.5em;
-  color: hsl(200, 100%, 90%);
-}
-
-.new-item-form input::placeholder {
-  color: inherit;
-}
-
-.new-item-form input:focus {
-  border: 1px solid hsl(200, 100%, 70%);
-}
-
-.header {
-  font-size: 1.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
+/* List styles */
 .list {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.list {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -121,28 +151,28 @@ main {
   align-items: center;
 }
 
-/* NEW */
+/* Todo item styles */
 .todo-item {
   display: flex;
   align-items: center;
-  padding: 10px 10px 10px 25px;
+  padding: 8px 25px;
   border: 1px solid var(--text-color);
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   width: 100%;
   cursor: pointer;
-
   position: relative;
 }
 
 .dark-mode .todo-item {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--bg-primary);
 }
 
 .todo-item.completed {
   border: 1px solid var(--success-color);
 }
 
+/* Drag icon styles */
 .drag-icon {
   position: absolute;
   top: 0;
@@ -156,7 +186,7 @@ main {
   fill: var(--primary-color);
 }
 
-
+/* Checkbox styles */
 .checkbox {
   margin-right: 10px;
   display: flex;
@@ -166,25 +196,18 @@ main {
   color: var(--success-color);
 }
 
+/* Title styles */
 .title {
   display: flex;
   align-items: center;
   width: 100%;
   user-select: none;
   overflow-wrap: anywhere;
-  ;
-
-  .drag-icon svg {
-    width: 100%;
-    /* Ensure the SVG icon fills the entire width of the container */
-    height: auto;
-    /* Maintain aspect ratio */
-  }
-
   min-width: 50px;
-  /* min-width ensures that the empty title remains clickable */
+  /* Ensure the empty title remains clickable */
 }
 
+/* Icon styles */
 .delete-icon {
   display: flex;
   margin-left: 7px;
@@ -209,9 +232,13 @@ main {
   margin-left: auto;
 }
 
-/* Apply hover effect to todo-item when hovering over delete icon */
+/* Hover effects */
 .todo-item:has(.delete-icon:hover) {
   border: 1px dashed var(--alert-color);
+}
+
+.todo-item:has(.edit-icon:hover) {
+  border: 1px solid var(--primary-color);
 }
 
 .drag-over {
@@ -219,8 +246,7 @@ main {
   border: 2px dashed #6D6666 !important;
 }
 
-/* prevent the title & icons (while dragging over the todo-item) from receiving mouse events
- to prevent flickering  */
+/* Prevent flickering during drag */
 .todo-item.drag-over .checkbox,
 .todo-item.drag-over .delete-icon,
 .todo-item.drag-over .title,
@@ -228,7 +254,7 @@ main {
   pointer-events: none;
 }
 
-/* react-toggle gray */
+/* React toggle styles */
 .react-toggle--checked.toggle-gray .react-toggle-track,
 .react-toggle--checked.toggle-gray:hover:not(.react-toggle--disabled) .react-toggle-track {
   background-color: #4D4D4D;
@@ -242,27 +268,83 @@ main {
   background-color: gray;
 }
 
-/* contentedidable */
+/* Content editable styles */
 .title:focus-visible {
   text-decoration: underline;
   outline: none;
   /* Remove default outline */
 }
 
-
-/* Swipe animation */
-@keyframes swipeAnimation {
-  0% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(300px);
-  }
+/* Fade-in and fade-out animations for todo items */
+.todo-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.swipe-animation {
-  animation: swipeAnimation 0.3s ease forwards;
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateX(300px);
+}
+
+
+/* Style for the color picker wrapper */
+.color-picker-wrapper {
+  display: inline-flex;
+  align-items: center;
+  /* vertically center text and circle */
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.color-picker-wrapper label {
+  margin: 0;
+  /* Remove default margins */
+  user-select: none;
+}
+
+.color-picker-wrapper input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  background: transparent;
+}
+
+/* WebKit */
+.color-picker-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 50%;
+}
+
+.color-picker-wrapper input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+/* Firefox */
+.color-picker-wrapper input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.color-picker-wrapper input[type="color"]:hover,
+.color-picker-wrapper input[type="color"]:focus {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  outline: none;
 }

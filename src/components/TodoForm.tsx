@@ -28,7 +28,7 @@ const TodoForm = () => {
     <form onSubmit={handleSubmit} className="new-item-form">
       <div className="form-row">
 
-        <label htmlFor="item"><h3 style={{ marginBottom: 0 }}>Enter your Tasks for today!📝<span className="success">✔</span></h3></label>
+        <label htmlFor="item"><h3 style={{ marginBottom: 0 }}>Enter your Tasks</h3></label>
         <input
           value={newTodo}
           onChange={handleInput}
