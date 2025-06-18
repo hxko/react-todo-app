@@ -32,7 +32,7 @@ export const ToggleDarkMode: React.FC = () => {
     <label>
       <Toggle
         checked={darkMode ? true : false}
-        className='toggle-gray'
+        className='toggle-gray custom-toggle'
         icons={{
           checked: <FaSun size={12} />,
           unchecked: <FaMoon fill="#E6E6E6" size={10} />,
