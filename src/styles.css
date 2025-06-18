@@ -2,7 +2,7 @@
   --primary-color: hsl(120, 6%, 46%);
   --bg-primary: color-mix(in srgb, var(--primary-color) 20%, white);
   --bg-secondary: linear-gradient(135deg,
-      color-mix(in srgb, var(--primary-color) 40%, white) 0%,
+      color-mix(in srgb, var(--primary-color) 90%, rgb(0, 0, 0)) 0%,
       color-mix(in srgb, var(--primary-color) 60%, black) 100%);
   --text-color: color-mix(in srgb, var(--primary-color) 50%, black);
   /* Mix for optimal contrast */
@@ -132,6 +132,29 @@ main {
 .btn:hover,
 .btn:focus-visible {
   background: color-mix(in srgb, var(--bg-primary) 50%, var(--primary-color));
+}
+
+/* Lighter button modifier */
+.btn.secondary {
+  background-color: color-mix(in srgb, var(--primary-color) 35%, rgb(255, 255, 255));
+  border-color: color-mix(in srgb, var(--primary-color) 25%, rgb(255, 255, 255));
+  color: var(--text-color);
+}
+
+.btn.secondary:hover,
+.btn.secondary:focus-visible {
+  background-color: color-mix(in srgb, var(--primary-color) 50%, rgb(255, 255, 255));
+}
+
+.dark-mode .btn.secondary {
+  background-color: color-mix(in srgb, var(--primary-color) 35%, rgb(0, 0, 0));
+  border-color: color-mix(in srgb, var(--primary-color) 25%, rgb(0, 0, 0));
+  color: var(--text-color);
+}
+
+.dark-mode .btn.secondary:hover,
+.dark-mode .btn.secondary:focus-visible {
+  background-color: color-mix(in srgb, var(--primary-color) 50%, rgb(0, 0, 0));
 }
 
 /* List styles */
@@ -355,6 +378,7 @@ main {
   outline: none;
 }
 
+/* Fade-in effect for todo controls */
 .todo-controls {
   opacity: 0;
   transform: translateY(10px);

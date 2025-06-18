@@ -3,14 +3,14 @@ import TodoFilter, { FilterType } from './TodoFilter';
 import TodoSearch from './TodoSearch';
 import TodoList from './TodoList';
 import { useTodoContext } from '../context/TodoContext';
-import DeleteCompleted from './DeleteCompleted'; // Import the DeleteCompleted component
-import DeleteAllTodos from './DeleteAllTodos'; // Import the new DeleteAllTodos component
+import DeleteCompleted from './DeleteCompleted';
+import DeleteAllTodos from './DeleteAllTodos';
 
 const TodoControls: React.FC = () => {
   const { todos } = useTodoContext(); // Get todos from context
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isVisible, setIsVisible] = useState(false); // State for visibility
+  const [isVisible, setIsVisible] = useState(false); // State for visibility fade-in effect
 
   // Filter todos based on the current filter and search query
   const filteredTodos = todos.filter(todo => {
@@ -32,7 +32,7 @@ const TodoControls: React.FC = () => {
   return (
     <div className={`todo-controls ${isVisible ? 'fade-in' : ''}`}>
       <DeleteCompleted />
-      <DeleteAllTodos /> {/* Add the DeleteAllTodos component */}
+      <DeleteAllTodos />
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
         <TodoSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <TodoFilter currentFilter={filter} onChange={setFilter} />

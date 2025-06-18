@@ -20,7 +20,7 @@ const DeleteCompletedButton: React.FC = () => {
     <button
       onClick={deleteCompleted}
       disabled={!hasCompleted}
-      className="btn"
+      className="btn secondary"
       style={{ marginBottom: '1rem' }}
       aria-label="Delete all completed tasks"
     >

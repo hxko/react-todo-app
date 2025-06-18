@@ -12,7 +12,7 @@ const DeleteAllTodos: React.FC = () => {
   };
 
   return (
-    <button className="btn" onClick={handleDeleteAll} style={{ marginRight: '1rem', marginLeft: '1rem' }}>
+    <button className="btn secondary" onClick={handleDeleteAll} style={{ marginRight: '1rem', marginLeft: '1rem' }}>
       <RiDeleteBinLine /> Delete All
     </button>
   );
