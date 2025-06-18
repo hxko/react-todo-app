@@ -23,7 +23,7 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ currentFilter, onChange }) => {
           onClick={() => onChange(value)}
           style={{
             display: 'flex',
-            alignItems: 'center',    // Vertically centers icon and text
+            alignItems: 'center',
             cursor: 'pointer',
             color: currentFilter === value ? 'var(--primary-color)' : '#666',
             userSelect: 'none',
