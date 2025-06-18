@@ -7,5 +7,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist'
-  }
+  },
+  server: {
+    watch: {
+      usePolling: true, // Enable polling for file changes
+    },
+  },
 })
