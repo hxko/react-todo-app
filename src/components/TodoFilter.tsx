@@ -16,7 +16,7 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ currentFilter, onChange }) => {
   ];
 
   return (
-    <nav style={{ display: 'flex', gap: '1.5rem', marginBottom: '1rem', userSelect: 'none' }}>
+    <nav style={{ display: 'flex', gap: '1.5rem', userSelect: 'none' }}>
       {filters.map(({ label, icon, value }) => (
         <div
           key={value}

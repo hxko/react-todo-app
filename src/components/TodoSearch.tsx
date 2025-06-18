@@ -13,10 +13,7 @@ const TodoSearch: React.FC<TodoSearchProps> = ({ searchQuery, setSearchQuery }) 
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       style={{
-        marginBottom: '1rem',
-        padding: '0.5rem',
-        width: '100%',
-        borderRadius: '4px',
+
         border: '1px solid var(--primary-color)',
       }}
       aria-label="Search todos"

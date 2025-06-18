@@ -85,7 +85,7 @@ main {
   gap: 1rem;
 }
 
-.new-item-form input {
+input {
   outline: none;
   border: 1px solid var(--text-color);
   /* Use text color for border */
@@ -97,19 +97,19 @@ main {
   /* Light pastel background based on primary color */
 }
 
-.new-item-form input::placeholder {
+input::placeholder {
   color: var(--text-color);
   /* Use text color for placeholder */
 }
 
-.new-item-form input:focus {
+input:focus {
   border: 1px solid var(--text-color);
   /* Use text color on focus */
 
 }
 
 /* Dark mode styles for input fields */
-.dark-mode .new-item-form input {
+.dark-mode input {
   background: color-mix(in srgb, var(--primary-color) 40%, black);
   /* Darker background in dark mode */
   border: 1px solid var(--text-color);

@@ -10,7 +10,6 @@ const DeleteCompletedButton: React.FC = () => {
   };
 
   const hasTodos = todos.length > 0;
-  const hasCompleted = todos.some(todo => todo.completed);
 
   if (!hasTodos) {
     return null; // Don't render button if no todos
@@ -19,7 +18,6 @@ const DeleteCompletedButton: React.FC = () => {
   return (
     <button
       onClick={deleteCompleted}
-      disabled={!hasCompleted}
       className="btn secondary"
       style={{ marginBottom: '1rem' }}
       aria-label="Delete all completed tasks"
