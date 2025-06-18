@@ -119,7 +119,7 @@ main {
 
 /* Button styles */
 .btn {
-  background: color-mix(in srgb, var(--bg-primary) 40%, var(--primary-color));
+  background: color-mix(in srgb, var(--bg-primary) 60%, var(--primary-color));
   border: 1px solid var(--primary-color);
   color: var(--text-color);
   /* Use text color for button text */
@@ -267,6 +267,13 @@ main {
   background-color: gray;
 }
 
+/* change react-toggle default box-shadow color*/
+.custom-toggle.react-toggle--focus .react-toggle-thumb {
+  -webkit-box-shadow: 0px 0px 5px 5px var(--primary-color);
+  -moz-box-shadow: 0px 0px 5px 5p var(--primary-color);
+  box-shadow: 0px 0px 5px 5px var(--primary-color);
+}
+
 /* Content editable styles */
 .title:focus-visible {
   text-decoration: underline;
@@ -346,4 +353,15 @@ main {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transform: scale(1.1);
   outline: none;
+}
+
+.todo-controls {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.todo-controls.fade-in {
+  opacity: 1;
+  transform: translateY(0);
 }
