@@ -7,7 +7,7 @@ import { useSwipeable } from 'react-swipeable';
 
 const TodoItem: React.FC<TodoItemTypes> = ({ completed, id, title }) => {
   const { todos, setTodos } = useTodoContext();
-  const [clickTimer, setClickTimer] = useState<number | undefined>();
+  const [clickTimer, setClickTimer] = useState<ReturnType<typeof setTimeout> | undefined>(undefined);
   const titleRef = useRef<HTMLDivElement>(null);
   const editedTitleRef = useRef<string>(title);
   const [isDraggingOver, setIsDraggingOver] = useState(false);

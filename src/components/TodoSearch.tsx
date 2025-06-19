@@ -8,6 +8,8 @@ interface TodoSearchProps {
 const TodoSearch: React.FC<TodoSearchProps> = ({ searchQuery, setSearchQuery }) => {
   return (
     <input
+      name="Search"
+      title="Search Todos"
       type="text"
       placeholder="Search todos..."
       value={searchQuery}
