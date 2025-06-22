@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { TodoContextType, TodoProviderProps, TodoItemTypes } from '../types/TodoItemTypes';
+import { createContext, useContext, useState } from 'react';
+import { TodoContextType, TodoProviderProps } from '../types/TodoItemTypes';
+import useTodos from '../hooks/useTodos';
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
@@ -13,26 +14,13 @@ export const useTodoContext = () => {
 
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
-  const [newTodo, setNewTodo] = useState('');
-
-  const [todos, setTodos] = useState<TodoItemTypes[]>(
-    // get todos from localStorage
-    () => {
-      const localTodos = localStorage.getItem("TodoItems");
-      if (localTodos == null) return [];
-      return JSON.parse(localTodos);
-    }
-  );
-
-  // Set local storage when todos change
-  useEffect(() => {
-    localStorage.setItem("TodoItems", JSON.stringify(todos))
-  }, [todos])
-
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const userId = 'exampleUser  Id'; // Replace with actual user ID
+  const { todos, setTodos, addTodo, deleteTodo, updateTodo } = useTodos(userId); // Use the useTodos hook
 
   return (
     <TodoContext.Provider
-      value={{ todos, setTodos, newTodo, setNewTodo, darkMode, setDarkMode }}
+      value={{ todos, setTodos, newTodoTitle, setNewTodoTitle, darkMode, setDarkMode, addTodo, deleteTodo, updateTodo }}
     >
       {children}
     </TodoContext.Provider>

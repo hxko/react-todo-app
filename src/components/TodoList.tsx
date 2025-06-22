@@ -1,8 +1,10 @@
 import TodoItem from './TodoItem';
+import { TodoItemTypes } from '../types/TodoItemTypes';
+import { AnimatePresence } from 'framer-motion';
 
 interface TodoListProps {
-  todos: Array<{ id: string; title: string; completed: boolean }>; // Adjust the type as necessary
-}
+  todos: TodoItemTypes[]
+};
 
 const TodoList: React.FC<TodoListProps> = ({ todos }) => {
   return (
@@ -12,9 +14,11 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
         {todos.length === 0 ? (
           <p>No tasks to display.</p>
         ) : (
-          todos.map(todo => (
-            <TodoItem key={todo.id} {...todo} />
-          ))
+          <AnimatePresence>
+            {todos.map(todo => (
+              <TodoItem key={todo._id} {...todo} />
+            ))}
+          </AnimatePresence>
         )}
       </ul>
     </>

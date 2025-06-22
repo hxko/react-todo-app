@@ -1,25 +1,24 @@
-
+// TodoItemTypes.ts
 export interface TodoItemTypes {
-  id: string;
-  title: string;
-  completed: boolean;
+  _id: string; // Unique identifier for the todo item
+  title: string; // Title of the todo item
+  completed: boolean; // Completion status of the todo item
 }
 
-// TodoContext context Provider
+// TodoContextType.ts
 export interface TodoContextType {
   todos: TodoItemTypes[];
   setTodos: React.Dispatch<React.SetStateAction<TodoItemTypes[]>>;
-  newTodo: TodoItemTypes['id'];
-  setNewTodo: React.Dispatch<React.SetStateAction<TodoItemTypes['id']>>;
+  newTodoTitle: string;
+  setNewTodoTitle: React.Dispatch<React.SetStateAction<string>>;
   darkMode: boolean;
-  setDarkMode: React.Dispatch<React.SetStateAction<TodoContextType['darkMode']>>
-  // editedTitle: string;
-  // setEditedTitle: React.Dispatch<React.SetStateAction<TodoContextType['editedTitle']>>;
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  addTodo: (title: string) => Promise<void>;
+  deleteTodo: (id: string) => Promise<void>;
+  updateTodo: (id: string, title: string, completed: boolean) => Promise<void>;
 }
 
-
-
-// TodoProvider children
+// TodoProviderProps.ts
 export interface TodoProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode; // Children components to be rendered within the provider
 }

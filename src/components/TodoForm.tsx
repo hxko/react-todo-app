@@ -1,36 +1,27 @@
+import React from 'react';
 import { useTodoContext } from '../context/TodoContext';
-import { TodoItemTypes } from '../types/TodoItemTypes';
-import { v4 as uuidv4 } from 'uuid';
 
-const TodoForm = () => {
-
-  const { setNewTodo, newTodo, setTodos } = useTodoContext();
-
-  const addTodo = (title: TodoItemTypes['title']) => {
-    setTodos(currentTodos => (
-      [...currentTodos, { id: uuidv4(), title, completed: false }])
-    )
-  }
+const TodoForm: React.FC = () => {
+  const { setNewTodoTitle, newTodoTitle, addTodo } = useTodoContext(); // Use context
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setNewTodo(e.target.value);
-  }
+    setNewTodoTitle(e.target.value); // Update the new todo title
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (newTodo.trim() !== "") {
-      addTodo(newTodo);
-      setNewTodo("");
+    if (newTodoTitle.trim() !== "") {
+      addTodo(newTodoTitle); // Use addTodo from context
+      setNewTodoTitle(""); // Reset the input field
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="new-item-form">
       <div className="form-row">
-
         <label htmlFor="item"><h3 style={{ marginBottom: 0 }}>Enter your Tasks</h3></label>
         <input
-          value={newTodo}
+          value={newTodoTitle} // Use newTodoTitle from context
           onChange={handleInput}
           type="text"
           id="item"
@@ -40,8 +31,8 @@ const TodoForm = () => {
       <button type="submit" className="btn">
         Add Todo
       </button>
-    </form >
-  )
-}
+    </form>
+  );
+};
 
-export default TodoForm
+export default TodoForm;
