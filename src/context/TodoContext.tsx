@@ -14,13 +14,12 @@ export const useTodoContext = () => {
 
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
-  const [newTodoTitle, setNewTodoTitle] = useState('');
-  const userId = 'exampleUser  Id'; // Replace with actual user ID
+  const userId = '12345'; // Replace with actual user ID
   const { todos, setTodos, addTodo, deleteTodo, updateTodo } = useTodos(userId); // Use the useTodos hook
 
   return (
     <TodoContext.Provider
-      value={{ todos, setTodos, newTodoTitle, setNewTodoTitle, darkMode, setDarkMode, addTodo, deleteTodo, updateTodo }}
+      value={{ todos, setTodos, darkMode, setDarkMode, addTodo, deleteTodo, updateTodo }}
     >
       {children}
     </TodoContext.Provider>

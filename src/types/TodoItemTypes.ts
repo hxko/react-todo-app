@@ -9,8 +9,6 @@ export interface TodoItemTypes {
 export interface TodoContextType {
   todos: TodoItemTypes[];
   setTodos: React.Dispatch<React.SetStateAction<TodoItemTypes[]>>;
-  newTodoTitle: string;
-  setNewTodoTitle: React.Dispatch<React.SetStateAction<string>>;
   darkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   addTodo: (title: string) => Promise<void>;

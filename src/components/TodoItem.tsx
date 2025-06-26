@@ -18,6 +18,7 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => {
   useEffect(() => {
     if (isEditing && titleRef.current) {
       titleRef.current.focus();
+      // Adjust cursor to the end
       const range = document.createRange();
       const selection = window.getSelection();
       range.selectNodeContents(titleRef.current);

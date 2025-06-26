@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 
 const ColorPicker: React.FC = () => {
-  const [color, setColor] = useState<string>('#5cd1a6'); // default fallback in hex for hsl(146, 100%, 63%)
+  const [color, setColor] = useState<string>('#5cd1a6'); // default fallback
 
   // On mount, load saved color from localStorage or use default
   useEffect(() => {
