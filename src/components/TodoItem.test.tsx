@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import TodoItem from './TodoItem'; // Corrected import
-import { useTodoContext } from '../context/TodoContext'; // Import the hook
+import { TodoItem } from './todos/TodoItem/TodoItem';
+import { useTodoContext } from '../context/TodoContext';
 
 // Mock the context
 jest.mock('../context/TodoContext', () => ({

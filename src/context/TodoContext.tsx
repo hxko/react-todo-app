@@ -15,33 +15,10 @@ export const useTodoContext = () => {
 
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
-
-  const {
-    todos,
-    setTodos,
-    loading,
-    error,
-    addTodo,
-    deleteTodo,
-    updateTodo,
-    refetchTodos
-  } = useTodos();
+  const todosState = useTodos();
 
   return (
-    <TodoContext.Provider
-      value={{
-        todos,
-        setTodos,
-        darkMode,
-        setDarkMode,
-        addTodo,
-        deleteTodo,
-        updateTodo,
-        loading,
-        error,
-        refetchTodos
-      }}
-    >
+    <TodoContext.Provider value={{ ...todosState, darkMode, setDarkMode }}>
       {children}
     </TodoContext.Provider>
   );

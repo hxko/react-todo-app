@@ -9,7 +9,7 @@ const root = document.getElementById('root');
 if (root) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <Router> {/* <-- Wrap everything with Router */}
+      <Router>
         <AuthProvider>
           <TodoProvider>
             <App />

@@ -1,7 +1,6 @@
 // src/hooks/useTodos.js
 import { useState, useEffect, useCallback } from 'react';
 import { TodoItemTypes } from '../types/TodoItemTypes';
-import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../context/AuthContext';
@@ -14,7 +13,7 @@ const useTodos = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Show loading toast
+  // Show loading toast (no changes needed here)
   const showLoadingToast = (message: string) => {
     return toast.loading(message, {
       position: "bottom-right",
@@ -27,7 +26,7 @@ const useTodos = () => {
     }) as string;
   };
 
-  // Update toast to success/error
+  // Update toast to success/error (no changes needed here)
   const updateToast = (id: string, type: 'success' | 'error', message: string) => {
     toast.update(id, {
       render: message,
@@ -42,18 +41,17 @@ const useTodos = () => {
   };
 
   // Function to get headers with the token
-  const getHeaders = async () => {
+  const getHeaders = useCallback(async () => {
     const token = await user?.getIdToken();
-
     return {
-      'Authorization': `Bearer ${token}`, // Include the token in the headers
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     };
-  };
+  }, [user]);
 
   // Memoized fetch function
   const fetchUserTodos = useCallback(async () => {
-    if (!user) return; // Exit if user is not authenticated
+    if (!user) return;
 
     setLoading(true);
     setError(null);
@@ -79,10 +77,10 @@ const useTodos = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, getHeaders]); // dependency on getHeaders
 
   // Add a new todo with optimistic updates
-  const addTodo = async (title: string) => {
+  const addTodo = useCallback(async (title: string) => {
     if (!title.trim()) {
       toast.error('Todo title cannot be empty');
       return;
@@ -106,7 +104,9 @@ const useTodos = () => {
       }
 
       const savedTodo = await response.json();
-      setTodos(current => [...current, savedTodo]); // Add the server-created todo
+
+      // Use functional update to avoid creating a new reference
+      setTodos(current => [...current, savedTodo]);
       updateToast(toastId, 'success', 'Todo added successfully');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to add todo';
@@ -114,17 +114,19 @@ const useTodos = () => {
       updateToast(toastId, 'error', message);
       console.error('Error adding todo:', err);
     }
-  };
+  }, [getHeaders, user?.uid]);
+
 
   // Delete a todo
-  const deleteTodo = async (id: string) => {
+  const deleteTodo = useCallback(async (id: string) => {
     const toastId = showLoadingToast('Deleting todo...');
+    const originalTodos = todos;
     setTodos(current => current.filter(todo => todo._id !== id));
 
     try {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
-        headers: await getHeaders(), // Use the headers from the function
+        headers: await getHeaders(),
       });
 
       if (!response.ok) {
@@ -132,22 +134,23 @@ const useTodos = () => {
       }
       updateToast(toastId, 'success', 'Todo deleted successfully');
     } catch (err) {
-      fetchUserTodos();
+      setTodos(originalTodos); // Revert on error
       const message = err instanceof Error ? err.message : 'Failed to delete todo';
       setError(message);
       updateToast(toastId, 'error', message);
       console.error('Error deleting todo:', err);
     }
-  };
+  }, [getHeaders]); // dependency on getHeaders and todos
 
   // Update a todo
-  const updateTodo = async (id: string, title: string, completed: boolean) => {
+  const updateTodo = useCallback(async (id: string, title: string, completed: boolean) => {
+    const originalTodos = todos;
     setTodos(current => current.map(todo => todo._id === id ? { ...todo, title, completed } : todo));
 
     try {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
-        headers: await getHeaders(), // Use the headers from the function
+        headers: await getHeaders(),
         body: JSON.stringify({ title, completed }),
       });
 
@@ -155,12 +158,12 @@ const useTodos = () => {
         throw new Error(`Failed to update todo (${response.status})`);
       }
     } catch (err) {
-      fetchUserTodos();
+      setTodos(originalTodos); // Revert on error
       const message = err instanceof Error ? err.message : 'Failed to update todo';
       setError(message);
       console.error('Error updating todo:', err);
     }
-  };
+  }, [getHeaders]); // dependency on getHeaders and todos
 
   useEffect(() => {
     fetchUserTodos();

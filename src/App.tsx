@@ -1,37 +1,13 @@
+// src/App.tsx
 import { useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './styles.css';
-import { useTodoContext } from './context/TodoContext';
 import { useAuth } from './context/AuthContext';
-import { TodoForm, ToggleDarkMode, ColorPicker, TodoControls, LoginForm } from './components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-const MainAppContent = () => {
-  const { todos } = useTodoContext();
-  const { logout } = useAuth();
-
-  return (
-    <main>
-      <div className="app-header">
-        <div className="header-controls">
-          <ToggleDarkMode />
-          <ColorPicker />
-          <button onClick={logout} className="logout-btn">Sign Out</button>
-        </div>
-      </div>
-      <TodoForm />
-      {todos.length > 0 && <TodoControls />}
-    </main>
-  );
-};
-
-const LoadingScreen = () => (
-  <div className="loading-container">
-    <div className="spinner" />
-    <p>Loading application...</p>
-  </div>
-);
+import { LoginPage } from './pages/Login';
+import { MainApp } from './pages/MainApp';
+import { LoadingScreen } from './components/LoadingScreen';
 
 export default function App() {
   const { user, loading, authInitialized } = useAuth();
@@ -54,13 +30,13 @@ export default function App() {
       <Routes>
         <Route
           path="/login"
-          element={!user ? <LoginForm /> : <Navigate to="/" replace />}
+          element={!user ? <LoginPage /> : <Navigate to="/" replace />}
         />
         <Route
           path="/"
           element={
             loading ? <LoadingScreen /> :
-              user ? <MainAppContent /> : <Navigate to="/login" replace />
+              user ? <MainApp /> : <Navigate to="/login" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
