@@ -88,33 +88,27 @@ const useTodos = () => {
       return;
     }
 
-    const tempId = uuidv4();
-    const newTodo = {
-      _id: tempId,
-      title,
-      completed: false,
-      userId: user?.uid // Use user.uid
-    };
-
     const toastId = showLoadingToast('Adding todo...');
-    setTodos(current => [...current, newTodo]);
 
     try {
       const response = await fetch(API_BASE_URL, {
         method: 'POST',
-        headers: await getHeaders(), // Use the headers from the function
-        body: JSON.stringify(newTodo),
+        headers: await getHeaders(),
+        body: JSON.stringify({
+          title,
+          completed: false,
+          userId: user?.uid
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`Failed to add todo (${response.status})`);
       }
 
-      const savedTodo: TodoItemTypes = await response.json();
-      setTodos(current => current.map(todo => todo._id === tempId ? savedTodo : todo));
+      const savedTodo = await response.json();
+      setTodos(current => [...current, savedTodo]); // Add the server-created todo
       updateToast(toastId, 'success', 'Todo added successfully');
     } catch (err) {
-      setTodos(current => current.filter(todo => todo._id !== tempId));
       const message = err instanceof Error ? err.message : 'Failed to add todo';
       setError(message);
       updateToast(toastId, 'error', message);

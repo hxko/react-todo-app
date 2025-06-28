@@ -13,7 +13,10 @@ export const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => 
   const titleRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-
+  // Render tracking
+  const renderCountRef = useRef(0);
+  renderCountRef.current += 1;
+  console.log(`TodoItem ${_id} rendered ${renderCountRef.current} times`);
 
   ///////////////////////// EDIT & Toggle completed /////////////////////////
   // Focus title when edit mode is activated
@@ -44,8 +47,6 @@ export const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => 
   // Saves the edited title and closes the editing mode
   const handleEditSave = () => setIsEditing(false);
 
-  // Handles the deletion of the todo item
-  const handleDelete = async () => await deleteTodo(_id);
 
   // Toggle the completed state of the todo item
   const handleToggleCompleted = async () => {
@@ -53,9 +54,21 @@ export const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => 
     await updateTodo(_id, title, updatedCompletedState);
   };
 
+  // Handles the deletion of the todo item via click
+  const handleDelete = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    await deleteTodo(_id);
+  };
+
+  // Handles the deletion of the todo item via swipe
+  const handleSwipeDelete = async () => {
+    await deleteTodo(_id);
+  };
+
   // Swipeable functionality for deleting the todo item
   const swipeHandlers = useSwipeable({
-    onSwipedRight: handleDelete,
+    onSwipedRight: handleSwipeDelete,
     trackMouse: true,
     trackTouch: true,
     swipeDuration: 250,
