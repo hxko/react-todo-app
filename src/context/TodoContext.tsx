@@ -1,3 +1,4 @@
+// src/context/TodoContext.js
 import { createContext, useContext, useState } from 'react';
 import { TodoContextType, TodoProviderProps } from '../types/TodoItemTypes';
 import useTodos from '../hooks/useTodos';
@@ -14,12 +15,32 @@ export const useTodoContext = () => {
 
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
-  const userId = '12345'; // Replace with actual user ID
-  const { todos, setTodos, addTodo, deleteTodo, updateTodo } = useTodos(userId); // Use the useTodos hook
+
+  const {
+    todos,
+    setTodos,
+    loading,
+    error,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+    refetchTodos
+  } = useTodos();
 
   return (
     <TodoContext.Provider
-      value={{ todos, setTodos, darkMode, setDarkMode, addTodo, deleteTodo, updateTodo }}
+      value={{
+        todos,
+        setTodos,
+        darkMode,
+        setDarkMode,
+        addTodo,
+        deleteTodo,
+        updateTodo,
+        loading,
+        error,
+        refetchTodos
+      }}
     >
       {children}
     </TodoContext.Provider>

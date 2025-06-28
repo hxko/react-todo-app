@@ -1,4 +1,4 @@
-import TodoItem from './TodoItem';
+import { TodoItem } from './TodoItem';
 import { TodoItemTypes } from '../types/TodoItemTypes';
 import { AnimatePresence } from 'framer-motion';
 
@@ -6,7 +6,7 @@ interface TodoListProps {
   todos: TodoItemTypes[]
 };
 
-const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+export const TodoList: React.FC<TodoListProps> = ({ todos }) => {
   return (
     <>
       <h1>Tasks</h1>
@@ -24,5 +24,3 @@ const TodoList: React.FC<TodoListProps> = ({ todos }) => {
     </>
   );
 };
-
-export default TodoList;

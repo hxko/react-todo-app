@@ -4,21 +4,23 @@ import { useTodoContext } from "../context/TodoContext";
 import { RiCheckboxBlankCircleLine, RiCheckboxCircleFill, RiEdit2Line, RiCloseLine, RiDraggable } from 'react-icons/ri';
 import ReactContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import { useSwipeable } from 'react-swipeable';
-import DeleteIcon from './DeleteIcon';
+import { DeleteIcon } from './DeleteIcon';
 import { motion } from 'framer-motion';
 
-const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => {
+export const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => {
   const { todos, setTodos, updateTodo, deleteTodo } = useTodoContext();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const titleRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
+
+  ///////////////////////// EDIT & Toggle completed /////////////////////////
   // Focus title when edit mode is activated
   useEffect(() => {
     if (isEditing && titleRef.current) {
       titleRef.current.focus();
-      // Adjust cursor to the end
+      // adjust cursor to the end
       const range = document.createRange();
       const selection = window.getSelection();
       range.selectNodeContents(titleRef.current);
@@ -60,7 +62,7 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => {
     delta: 30,
   });
 
-  // Drag & Drop functionality
+  ///////////////////////// Drag & Drop functionality /////////////////////////////
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     isDraggingRef.current = true;
     e.dataTransfer.setData("text/plain", _id);
@@ -145,9 +147,8 @@ const TodoItem: React.FC<TodoItemTypes> = ({ completed, _id, title }) => {
         onClick={handleEditToggle}
         title="Edit"
       />
-      <DeleteIcon onDelete={handleDelete} />
+      <DeleteIcon onClick={handleDelete} />
     </motion.div>
   );
 };
 
-export default TodoItem;

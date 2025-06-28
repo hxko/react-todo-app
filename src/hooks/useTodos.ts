@@ -1,82 +1,187 @@
-// useTodos.ts
-import { useState, useEffect } from 'react';
+// src/hooks/useTodos.js
+import { useState, useEffect, useCallback } from 'react';
 import { TodoItemTypes } from '../types/TodoItemTypes';
+import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../context/AuthContext';
 
-const useTodos = (userId: string) => {
+const API_BASE_URL = 'http://localhost:5000/api/todos';
+
+const useTodos = () => {
+  const { user } = useAuth(); // Get the user from Auth context
   const [todos, setTodos] = useState<TodoItemTypes[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch user's todos
-  const fetchUserTodos = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/todos/${userId}`);
-      if (!response.ok) throw new Error('Failed to fetch todos');
-      const userTodos: TodoItemTypes[] = await response.json();
-      setTodos(userTodos);
-    } catch (error) {
-      console.error('Error fetching todos:', error);
-    }
+  // Show loading toast
+  const showLoadingToast = (message: string) => {
+    return toast.loading(message, {
+      position: "bottom-right",
+      autoClose: false,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    }) as string;
   };
 
-  // Add a new todo
-  const addTodo = async (title: string) => {
+  // Update toast to success/error
+  const updateToast = (id: string, type: 'success' | 'error', message: string) => {
+    toast.update(id, {
+      render: message,
+      type,
+      isLoading: false,
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  // Function to get headers with the token
+  const getHeaders = async () => {
+    const token = await user?.getIdToken();
+
+    return {
+      'Authorization': `Bearer ${token}`, // Include the token in the headers
+      'Content-Type': 'application/json',
+    };
+  };
+
+  // Memoized fetch function
+  const fetchUserTodos = useCallback(async () => {
+    if (!user) return; // Exit if user is not authenticated
+
+    setLoading(true);
+    setError(null);
+    const toastId = showLoadingToast('Loading todos...');
+
     try {
-      const response = await fetch('http://localhost:5000/api/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, userId }),
+      const response = await fetch(`${API_BASE_URL}`, {
+        method: 'GET',
+        headers: await getHeaders(),
+        credentials: 'include'
       });
-      if (!response.ok) throw new Error('Failed to save todo');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch todos (${response.status})`);
+      }
+      const userTodos: TodoItemTypes[] = await response.json();
+      setTodos(userTodos);
+      updateToast(toastId, 'success', 'Todos loaded successfully');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch todos';
+      setError(message);
+      updateToast(toastId, 'error', message);
+      console.error('Error fetching todos:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  // Add a new todo with optimistic updates
+  const addTodo = async (title: string) => {
+    if (!title.trim()) {
+      toast.error('Todo title cannot be empty');
+      return;
+    }
+
+    const tempId = uuidv4();
+    const newTodo = {
+      _id: tempId,
+      title,
+      completed: false,
+      userId: user?.uid // Use user.uid
+    };
+
+    const toastId = showLoadingToast('Adding todo...');
+    setTodos(current => [...current, newTodo]);
+
+    try {
+      const response = await fetch(API_BASE_URL, {
+        method: 'POST',
+        headers: await getHeaders(), // Use the headers from the function
+        body: JSON.stringify(newTodo),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to add todo (${response.status})`);
+      }
+
       const savedTodo: TodoItemTypes = await response.json();
-      setTodos((currentTodos) => [...currentTodos, savedTodo]);
-    } catch (error) {
-      console.error('Error saving todo:', error);
+      setTodos(current => current.map(todo => todo._id === tempId ? savedTodo : todo));
+      updateToast(toastId, 'success', 'Todo added successfully');
+    } catch (err) {
+      setTodos(current => current.filter(todo => todo._id !== tempId));
+      const message = err instanceof Error ? err.message : 'Failed to add todo';
+      setError(message);
+      updateToast(toastId, 'error', message);
+      console.error('Error adding todo:', err);
     }
   };
 
   // Delete a todo
   const deleteTodo = async (id: string) => {
+    const toastId = showLoadingToast('Deleting todo...');
+    setTodos(current => current.filter(todo => todo._id !== id));
+
     try {
-      const response = await fetch(`http://localhost:5000/api/todos/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
+        headers: await getHeaders(), // Use the headers from the function
       });
-      if (!response.ok) throw new Error('Failed to delete todo');
 
-      // Update the state immediately after the API call
-      setTodos((currentTodos) => currentTodos.filter(todo => todo._id !== id));
-    } catch (error) {
-      console.error('Error deleting todo:', error);
+      if (!response.ok) {
+        throw new Error(`Failed to delete todo (${response.status})`);
+      }
+      updateToast(toastId, 'success', 'Todo deleted successfully');
+    } catch (err) {
+      fetchUserTodos();
+      const message = err instanceof Error ? err.message : 'Failed to delete todo';
+      setError(message);
+      updateToast(toastId, 'error', message);
+      console.error('Error deleting todo:', err);
     }
   };
 
-  // useTodos.ts
+  // Update a todo
   const updateTodo = async (id: string, title: string, completed: boolean) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/todos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, completed }), // Include completed state
-      });
-      if (!response.ok) throw new Error('Failed to update todo');
+    setTodos(current => current.map(todo => todo._id === id ? { ...todo, title, completed } : todo));
 
-      // Update the local state
-      setTodos((currentTodos) =>
-        currentTodos.map(todo => (todo._id === id ? { ...todo, title, completed } : todo))
-      );
-    } catch (error) {
-      console.error('Error updating todo:', error);
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'PUT',
+        headers: await getHeaders(), // Use the headers from the function
+        body: JSON.stringify({ title, completed }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update todo (${response.status})`);
+      }
+    } catch (err) {
+      fetchUserTodos();
+      const message = err instanceof Error ? err.message : 'Failed to update todo';
+      setError(message);
+      console.error('Error updating todo:', err);
     }
   };
-
 
   useEffect(() => {
     fetchUserTodos();
-  }, [userId]);
+  }, [fetchUserTodos]);
 
-  return { todos, setTodos, addTodo, deleteTodo, updateTodo };
+  return {
+    todos,
+    setTodos,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+    loading,
+    error,
+    refetchTodos: fetchUserTodos
+  };
 };
 
 export default useTodos;

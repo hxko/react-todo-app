@@ -62,15 +62,11 @@ main {
   max-width: 500px;
 }
 
-/* Additional styles remain unchanged */
-
-
-/* Header */
-.header {
-  font-size: 1.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+.header-controls {
+  display: flex;
+  justify-content: space-between;
 }
+
 
 /* Form styles */
 .new-item-form {
@@ -388,4 +384,224 @@ input:focus {
 .todo-controls.fade-in {
   opacity: 1;
   transform: translateY(0);
+}
+
+
+
+
+/* Auth Container Styles */
+.auth-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: var(--bg-secondary);
+}
+
+.auth-container {
+  max-width: 400px;
+  width: 100%;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background: var(--bg-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid color-mix(in srgb, var(--text-color) 20%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-primary) 90%, transparent);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+  outline: none;
+}
+
+/* Button Styles */
+button[type="submit"] {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+button[type="submit"]:hover {
+  background: color-mix(in srgb, var(--primary-color) 90%, black);
+  transform: translateY(-1px);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Google Button */
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #4285F4;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.google-btn:hover {
+  background: #3367D6;
+  transform: translateY(-1px);
+}
+
+.google-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+/* Dark Mode Adjustments */
+.dark-mode .auth-container {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .form-group input {
+  background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}
+
+/* Logout Button Styles */
+.logout-btn {
+  padding: 0.7rem 1.2rem;
+  background: color-mix(in srgb, var(--primary-color) 90%, black);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.logout-btn:hover {
+  background: color-mix(in srgb, var(--primary-color) 80%, black);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode adjustments */
+.dark-mode .logout-btn {
+  background: color-mix(in srgb, var(--primary-color) 70%, black);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .logout-btn:hover {
+  background: color-mix(in srgb, var(--primary-color) 60%, black);
+}
+
+/* Icon styling (if you add one) */
+.logout-btn svg {
+  width: 16px;
+  height: 16px;
 }

@@ -8,7 +8,7 @@ interface TodoFilterProps {
   onChange: (filter: FilterType) => void;
 }
 
-const TodoFilter: React.FC<TodoFilterProps> = ({ currentFilter, onChange }) => {
+export const TodoFilter: React.FC<TodoFilterProps> = ({ currentFilter, onChange }) => {
   const filters: { label: string; icon: JSX.Element; value: FilterType }[] = [
     { label: 'All', icon: <RiListUnordered size={20} />, value: 'all' },
     { label: 'Active', icon: <RiCheckboxCircleLine size={20} />, value: 'active' },
@@ -40,4 +40,3 @@ const TodoFilter: React.FC<TodoFilterProps> = ({ currentFilter, onChange }) => {
   );
 };
 
-export default TodoFilter;

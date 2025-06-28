@@ -8,13 +8,17 @@ jest.mock('../context/TodoContext', () => ({
 }));
 
 const mockSetTodos = jest.fn();
+const mockDeleteTodo = jest.fn();
+const mockUpdateTodo = jest.fn();
 const mockTodos = [
-  { id: '1', title: 'Test Todo', completed: false },
+  { _id: '1', title: 'Test Todo', completed: false },
 ];
 
 const mockUseTodoContext = () => ({
   todos: mockTodos,
   setTodos: mockSetTodos,
+  deleteTodo: mockDeleteTodo,
+  updateTodo: mockUpdateTodo,
 });
 
 describe('TodoItem', () => {
@@ -28,7 +32,6 @@ describe('TodoItem', () => {
     expect(screen.getByText('Test Todo')).toBeInTheDocument();
   });
 
-
   test('edits todo title on double click', () => {
     render(<TodoItem {...mockTodos[0]} />);
     const todoItem = screen.getByText('Test Todo');
@@ -38,7 +41,7 @@ describe('TodoItem', () => {
     fireEvent.input(editableTitle, { target: { innerHTML: 'Updated Todo' } });
     fireEvent.keyDown(editableTitle, { key: 'Enter', code: 'Enter' });
 
-    expect(mockSetTodos).toHaveBeenCalledWith([{ id: '1', title: 'Updated Todo', completed: false }]);
+    expect(mockUpdateTodo).toHaveBeenCalledWith('1', 'Updated Todo', false);
   });
 
   test('cancels editing on cancel icon click', () => {
@@ -52,5 +55,33 @@ describe('TodoItem', () => {
     expect(mockSetTodos).not.toHaveBeenCalled();
   });
 
+  test('toggles completion status when clicked', () => {
+    render(<TodoItem {...mockTodos[0]} />);
+    const checkbox = screen.getByRole('checkbox'); // Assuming you have a checkbox for completion
 
+    fireEvent.click(checkbox);
+    expect(mockUpdateTodo).toHaveBeenCalledWith('1', 'Test Todo', true); // Assuming it toggles to completed
+  });
+
+  test('deletes todo item when delete icon is clicked', () => {
+    render(<TodoItem {...mockTodos[0]} />);
+    const deleteIcon = screen.getByTitle('Delete'); // Assuming you have a title for the delete icon
+
+    fireEvent.click(deleteIcon);
+    expect(mockDeleteTodo).toHaveBeenCalledWith('1');
+  });
+
+  test('renders completed todo item correctly', () => {
+    const completedTodo = { _id: '2', title: 'Completed Todo', completed: true };
+    (useTodoContext as jest.Mock).mockImplementation(() => ({
+      todos: [completedTodo],
+      setTodos: mockSetTodos,
+      deleteTodo: mockDeleteTodo,
+      updateTodo: mockUpdateTodo,
+    }));
+
+    render(<TodoItem {...completedTodo} />);
+    expect(screen.getByText('Completed Todo')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).toBeChecked(); // Assuming the checkbox reflects completion
+  });
 });

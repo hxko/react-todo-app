@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import TodoFilter, { FilterType } from './TodoFilter';
-import TodoSearch from './TodoSearch';
-import TodoList from './TodoList';
+import {
+  TodoFilter,
+  FilterType,
+  TodoSearch,
+  TodoList,
+  DeleteCompleted,
+  DeleteAllTodos
+} from '.';
 import { useTodoContext } from '../context/TodoContext';
-import DeleteCompleted from './DeleteCompleted';
-import DeleteAllTodos from './DeleteAllTodos';
 
-const TodoControls: React.FC = () => {
+export const TodoControls: React.FC = () => {
   const { todos } = useTodoContext(); // Get todos from context
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -31,8 +34,10 @@ const TodoControls: React.FC = () => {
 
   return (
     <div className={`todo-controls ${isVisible ? 'fade-in' : ''}`}>
-      <DeleteCompleted />
-      <DeleteAllTodos />
+      <div style={{ display: 'flex', gap: "1em", margin: '20px 0' }}>
+        <DeleteCompleted />
+        <DeleteAllTodos />
+      </div>
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
         <TodoSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <TodoFilter currentFilter={filter} onChange={setFilter} />
@@ -41,5 +46,3 @@ const TodoControls: React.FC = () => {
     </div>
   );
 };
-
-export default TodoControls;

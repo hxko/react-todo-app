@@ -9,8 +9,13 @@ export default defineConfig({
     outDir: 'dist'
   },
   server: {
+    host: 'localhost',
+    port: 5173,
     watch: {
       usePolling: true, // Enable polling for file changes
+    },
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
     },
   },
 })

@@ -2,7 +2,8 @@
 import React from 'react';
 import { useTodoContext } from '../context/TodoContext';
 import { RiDeleteBinLine } from 'react-icons/ri';
-const DeleteAllTodos: React.FC = () => {
+
+export const DeleteAllTodos: React.FC = () => {
   const { setTodos } = useTodoContext(); // Assuming you have a method to set todos in your context
 
   const handleDeleteAll = () => {
@@ -12,10 +13,9 @@ const DeleteAllTodos: React.FC = () => {
   };
 
   return (
-    <button className="btn secondary" onClick={handleDeleteAll} style={{ marginRight: '1rem', marginLeft: '1rem' }}>
+    <button className="btn secondary" onClick={handleDeleteAll}>
       <RiDeleteBinLine /> Delete All
     </button>
   );
 };
 
-export default DeleteAllTodos;

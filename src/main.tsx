@@ -1,13 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import { TodoProvider } from './context/TodoContext'; // Import the context provider
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom'; // <-- Add this import
+import App from './App';
+import { AuthProvider } from './context/AuthContext';
+import { TodoProvider } from './context/TodoContext';
 
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <TodoProvider>
-      <App />
-    </TodoProvider>
-  </React.StrictMode>,
-)
+const root = document.getElementById('root');
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <Router> {/* <-- Wrap everything with Router */}
+        <AuthProvider>
+          <TodoProvider>
+            <App />
+          </TodoProvider>
+        </AuthProvider>
+      </Router>
+    </React.StrictMode>
+  );
+}

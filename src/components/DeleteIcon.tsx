@@ -2,20 +2,14 @@ import React from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 interface DeleteIconProps {
-  onDelete: () => void; // Trigger fade-out animation
+  onClick: () => void; // Function to call when the icon is clicked
 }
 
-const DeleteIcon: React.FC<DeleteIconProps> = ({ onDelete }) => {
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();  // Prevent triggering the parent's onClick
-    onDelete(); // Trigger the fade-out animation
-  };
-
+export const DeleteIcon: React.FC<DeleteIconProps> = ({ onClick }) => {
   return (
-    <div className="delete-icon" onClick={handleDelete} title="Delete">
+    <div className="delete-icon" onClick={onClick} title="Delete">
       <RiDeleteBinLine />
     </div>
   );
 };
 
-export default DeleteIcon;

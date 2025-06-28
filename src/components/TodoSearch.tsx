@@ -5,7 +5,7 @@ interface TodoSearchProps {
   setSearchQuery: (query: string) => void;
 }
 
-const TodoSearch: React.FC<TodoSearchProps> = ({ searchQuery, setSearchQuery }) => {
+export const TodoSearch: React.FC<TodoSearchProps> = ({ searchQuery, setSearchQuery }) => {
   return (
     <input
       name="Search"
@@ -22,5 +22,3 @@ const TodoSearch: React.FC<TodoSearchProps> = ({ searchQuery, setSearchQuery }) 
     />
   );
 };
-
-export default TodoSearch;

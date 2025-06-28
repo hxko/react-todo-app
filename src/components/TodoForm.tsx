@@ -1,18 +1,20 @@
 import React from 'react';
+import { useState } from 'react';
 import { useTodoContext } from '../context/TodoContext';
 
-const TodoForm: React.FC = () => {
-  const { setNewTodoTitle, newTodoTitle, addTodo } = useTodoContext(); // Use context
+export const TodoForm: React.FC = () => {
+  const { addTodo } = useTodoContext(); // Use context
+  const [inputValue, setInputValue] = useState(''); // Local state for input value
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setNewTodoTitle(e.target.value); // Update the new todo title
+    setInputValue(e.target.value); // Update the input value
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (newTodoTitle.trim() !== "") {
-      addTodo(newTodoTitle); // Use addTodo from context
-      setNewTodoTitle(""); // Reset the input field
+    if (inputValue.trim() !== "") {
+      addTodo(inputValue); // Use addTodo from context
+      setInputValue(""); // Reset the input field
     }
   };
 
@@ -21,7 +23,7 @@ const TodoForm: React.FC = () => {
       <div className="form-row">
         <label htmlFor="item"><h3 style={{ marginBottom: 0 }}>Enter your Tasks</h3></label>
         <input
-          value={newTodoTitle} // Use newTodoTitle from context
+          value={inputValue} // Use newTodoTitle from context
           onChange={handleInput}
           type="text"
           id="item"
@@ -35,4 +37,3 @@ const TodoForm: React.FC = () => {
   );
 };
 
-export default TodoForm;

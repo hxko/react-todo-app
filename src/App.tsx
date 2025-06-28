@@ -1,25 +1,81 @@
-import "./styles.css";
-import TodoForm from "./components/TodoForm";
-import { ToggleDarkMode } from "./components/ToggleDarkMode";
-import ColorPicker from "./components/ColorPicker"; // Import the ColorPicker component
-import TodoControls from './components/TodoControls'; // Import the new TodoControls component
-import { useTodoContext } from './context/TodoContext'; // Import the context
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router';
+import './styles.css';
+import { useTodoContext } from './context/TodoContext';
+import { useAuth } from './context/AuthContext';
+import { TodoForm, ToggleDarkMode, ColorPicker, TodoControls, LoginForm } from './components';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function App() {
-  const { todos } = useTodoContext(); // Get todos from context
+const MainAppContent = () => {
+  const { todos } = useTodoContext();
+  const { logout } = useAuth();
 
   return (
     <main>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <ToggleDarkMode />
-        <ColorPicker />
+      <div className="app-header">
+        <div className="header-controls">
+          <ToggleDarkMode />
+          <ColorPicker />
+          <button onClick={logout} className="logout-btn">Sign Out</button>
+        </div>
       </div>
-
-      <div style={{ marginBottom: '20px' }}>
-        <TodoForm />
-      </div>
-
-      {todos.length > 0 && <TodoControls />} {/* Render TodoControls only if there are todos */}
+      <TodoForm />
+      {todos.length > 0 && <TodoControls />}
     </main>
+  );
+};
+
+const LoadingScreen = () => (
+  <div className="loading-container">
+    <div className="spinner" />
+    <p>Loading application...</p>
+  </div>
+);
+
+export default function App() {
+  const { user, loading, authInitialized } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && authInitialized) {
+      if (!user) {
+        navigate('/login');
+      }
+    }
+  }, [user, loading, authInitialized, navigate]);
+
+  if (!authInitialized) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <>
+      <Routes>
+        <Route
+          path="/login"
+          element={!user ? <LoginForm /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/"
+          element={
+            loading ? <LoadingScreen /> :
+              user ? <MainAppContent /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTodoContext } from '../context/TodoContext';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
-const DeleteCompletedButton: React.FC = () => {
+export const DeleteCompleted: React.FC = () => {
   const { todos, setTodos } = useTodoContext();
 
   const deleteCompleted = () => {
@@ -19,12 +19,9 @@ const DeleteCompletedButton: React.FC = () => {
     <button
       onClick={deleteCompleted}
       className="btn secondary"
-      style={{ marginBottom: '1rem' }}
       aria-label="Delete all completed tasks"
     >
       <RiDeleteBinLine /> Delete All Completed
     </button>
   );
 };
-
-export default DeleteCompletedButton;

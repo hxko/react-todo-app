@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 
-const ColorPicker: React.FC = () => {
+export const ColorPicker: React.FC = () => {
   const [color, setColor] = useState<string>('#5cd1a6'); // default fallback
 
   // On mount, load saved color from localStorage or use default
@@ -24,23 +24,20 @@ const ColorPicker: React.FC = () => {
   }
 
   return (
-    <div>
-      <div className="color-picker-wrapper">
-        <label htmlFor="color-picker" style={{ marginRight: '0.5rem' }}>
-          Choose Color:
-        </label>
-        <input
-          type="color"
-          id="color-picker"
-          value={color}
-          onChange={handleColorChange}
-          style={{ cursor: 'pointer' }}
-          aria-label="Select primary color"
-        />
-      </div>
+    <div className="color-picker-wrapper">
+      <label htmlFor="color-picker" style={{ marginRight: '0.5rem' }}>
+        Choose Color:
+      </label>
+      <input
+        type="color"
+        id="color-picker"
+        value={color}
+        onChange={handleColorChange}
+        style={{ cursor: 'pointer' }}
+        aria-label="Select primary color"
+      />
     </div>
   );
 };
 
-export default ColorPicker;
 

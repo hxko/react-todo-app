@@ -14,6 +14,9 @@ export interface TodoContextType {
   addTodo: (title: string) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
   updateTodo: (id: string, title: string, completed: boolean) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+  refetchTodos: () => Promise<void>;
 }
 
 // TodoProviderProps.ts
