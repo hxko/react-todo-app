@@ -1,6 +1,6 @@
 // src/components/todos/TodoList/useTodoList.ts
 import { useState } from 'react';
-import { useTodoContext } from '../../../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 import type { FilterType } from './TodoList.types';
 
 export const useTodoList = () => {

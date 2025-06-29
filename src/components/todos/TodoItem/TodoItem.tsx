@@ -1,25 +1,20 @@
-import React, { useRef } from 'react';
-import { TodoItemTypes } from "../../../types/TodoItemTypes";
+// src/components/TodoItem/TodoItem.tsx
+import React from 'react';
 import { RiCheckboxBlankCircleLine, RiCheckboxCircleFill, RiEdit2Line, RiCloseLine, RiDraggable } from 'react-icons/ri';
 import ReactContentEditable from 'react-contenteditable';
-import { DeleteIcon } from './../../DeleteIcon';
+import { DeleteIcon } from '@components/DeleteIcon';
 import { motion } from 'framer-motion';
 import { useTodoItem } from './useTodoItem';
+import { useTodoUI } from '@context/TodoUIContext';
 
-interface TodoItemProps extends TodoItemTypes {
-  onDrop: (draggedId: string, droppedId: string) => void;
+interface TodoItemProps {
+  _id: string;
+  title: string;
+  completed: boolean;
 }
 
-const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title, onDrop }) => {
-
-  //DEBUG
-  // Create a ref to count renders
-  const renderCount = useRef(0);
-  renderCount.current += 1; // Increment on each render
-  // Log the render count to the console
-  console.log(`TodoItem ${_id} rendered ${renderCount.current} times`);
-
-
+const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title }) => {
+  const { onDrop } = useTodoUI();
   const {
     isEditing,
     titleRef,
@@ -32,16 +27,13 @@ const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title, onD
   } = useTodoItem({ _id, title, completed });
 
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
-  const isDraggingRef = React.useRef(false);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    isDraggingRef.current = true;
     e.dataTransfer.setData("text/plain", _id);
     setIsDraggingOver(true);
   };
 
   const handleDragEnd = () => {
-    isDraggingRef.current = false;
     setIsDraggingOver(false);
   };
 
@@ -59,7 +51,7 @@ const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title, onD
     setIsDraggingOver(false);
     const draggedId = e.dataTransfer.getData("text/plain");
     if (draggedId !== _id) {
-      onDrop(draggedId, _id);  // Pass both draggedId and droppedId (_id)
+      onDrop(draggedId, _id);
     }
   };
 
@@ -72,21 +64,27 @@ const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title, onD
       transition={{ type: "spring", bounce: 0, duration: 0.3 }}
       {...swipeHandlers}
       onClick={handleToggleCompleted}
-      draggable
-      // onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onDragEnd={handleDragEnd}
     >
       <div
+        className="drag-handle"
         draggable
         onDragStart={handleDragStart}
-        onDragOver={(e) => e.preventDefault()}
+        onClick={(e) => e.stopPropagation()}
       >
         <RiDraggable className="drag-icon" title="Drag Me" />
       </div>
-      <div className={`checkbox ${completed ? 'completed' : ''}`} onClick={handleToggleCompleted}>
+
+      <div
+        className={`checkbox ${completed ? 'completed' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleToggleCompleted();
+        }}
+      >
         {completed ? <RiCheckboxCircleFill /> : <RiCheckboxBlankCircleLine />}
       </div>
 
@@ -103,28 +101,35 @@ const TodoItemComponent: React.FC<TodoItemProps> = ({ completed, _id, title, onD
           else if (e.key === "Escape") cancelEdit();
         }}
       />
+
       {isEditing && (
         <RiCloseLine
           className="cancel-icon"
-          onClick={() => cancelEdit()}
+          onClick={(e) => {
+            e.stopPropagation();
+            cancelEdit();
+          }}
           title="Cancel"
         />
       )}
 
       <RiEdit2Line
         className="edit-icon"
-        onClick={handleEditToggle}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleEditToggle();
+        }}
         title="Edit"
       />
-      <DeleteIcon onClick={handleDelete} />
+
+      <DeleteIcon
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDelete(e);
+        }}
+      />
     </motion.div>
   );
 };
 
-export const TodoItem = React.memo(TodoItemComponent, (prevProps, nextProps) => {
-  return (
-    prevProps._id === nextProps._id &&
-    prevProps.title === nextProps.title &&
-    prevProps.completed === nextProps.completed
-  );
-});
+export const TodoItem = React.memo(TodoItemComponent);

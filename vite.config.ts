@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,5 +18,17 @@ export default defineConfig({
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
     },
+  },
+  resolve: {
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+      { find: '@context', replacement: path.resolve(__dirname, 'src/context') },
+      { find: '@components', replacement: path.resolve(__dirname, 'src/components') },
+      { find: '@hooks', replacement: path.resolve(__dirname, 'src/hooks') },
+      {
+        find: '@components',
+        replacement: path.resolve(__dirname, 'src/components/index.ts')
+      },
+    ],
   },
 })

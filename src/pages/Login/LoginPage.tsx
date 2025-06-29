@@ -1,6 +1,6 @@
 // src/components/Auth/LoginForm.tsx
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LoginPageProps } from './LoginPage.types';

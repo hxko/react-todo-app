@@ -1,21 +1,14 @@
-import React, { useMemo } from 'react';
-import { TodoItem } from '../TodoItem';
+// src/components/todos/TodoList.tsx
+import { useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { TodoItemTypes } from "../../../types/TodoItemTypes";
+import { useTodoContext } from '@context/TodoContext';
+import { useTodoUI } from '@context/TodoUIContext';
+import { TodoItem } from '@components/todos/TodoItem';
 
-interface TodoListProps {
-  todos: TodoItemTypes[];
-  searchQuery: string;
-  filter: 'all' | 'active' | 'completed';
-  onDrop: (id: string) => void; // Assuming onDrop is a function to handle drop events
-}
+export const TodoList = () => {
+  const { todos } = useTodoContext();
+  const { searchQuery, filter } = useTodoUI();
 
-export const TodoList: React.FC<TodoListProps> = ({
-  todos,
-  searchQuery,
-  filter,
-  onDrop
-}) => {
   const filteredTodos = useMemo(() => {
     return todos.filter(todo => {
       const matchesSearch = todo.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -38,9 +31,8 @@ export const TodoList: React.FC<TodoListProps> = ({
               <TodoItem
                 key={todo._id}
                 _id={todo._id}
-                title={todo.title} // Pass the title prop
-                completed={todo.completed} // Pass the completed prop
-                onDrop={onDrop} // Pass the onDrop prop
+                title={todo.title}
+                completed={todo.completed}
               />
             ))}
           </AnimatePresence>

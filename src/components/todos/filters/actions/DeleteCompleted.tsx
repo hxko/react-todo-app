@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTodoContext } from '../../../../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 export const DeleteCompleted: React.FC = () => {

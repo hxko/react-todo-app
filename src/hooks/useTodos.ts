@@ -1,9 +1,9 @@
 // src/hooks/useTodos.js
 import { useState, useEffect, useCallback } from 'react';
-import { TodoItemTypes } from '../types/TodoItemTypes';
+import { TodoItemTypes } from '@types/TodoItemTypes';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 
 const API_BASE_URL = 'http://localhost:5000/api/todos';
 

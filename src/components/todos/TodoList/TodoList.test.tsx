@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { TodoList } from './TodoList'
-import { TodoProvider } from '../../../context/TodoContext';
+import { TodoProvider } from '@context/TodoContext';
 import '@testing-library/jest-dom';
 
 describe('TodoList Component', () => {

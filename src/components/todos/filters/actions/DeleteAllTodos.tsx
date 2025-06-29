@@ -1,6 +1,6 @@
 // DeleteAllTodos.tsx
 import React from 'react';
-import { useTodoContext } from '../../../../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 export const DeleteAllTodos: React.FC = () => {

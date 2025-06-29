@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTodoContext } from '../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 import "react-toggle/style.css";
 import Toggle from 'react-toggle';
 import { FaMoon, FaSun } from 'react-icons/fa';

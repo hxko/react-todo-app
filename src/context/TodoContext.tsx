@@ -1,7 +1,7 @@
 // src/context/TodoContext.js
 import { createContext, useContext, useState } from 'react';
-import { TodoContextType, TodoProviderProps } from '../types/TodoItemTypes';
-import useTodos from '../hooks/useTodos';
+import { TodoContextType, TodoProviderProps } from '@types/TodoItemTypes';
+import useTodos from '@hooks/useTodos';
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 

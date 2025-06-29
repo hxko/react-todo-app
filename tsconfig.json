@@ -22,6 +22,28 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    /* Path aliases */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@context/*": [
+        "src/context/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@components": [
+        "./src/components/index"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@types/*": [
+        "src/types/*"
+      ]
+    },
     /* Add this line to include Jest types */
     "types": [
       "jest",

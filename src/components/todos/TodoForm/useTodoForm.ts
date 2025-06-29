@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTodoContext } from '../../../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 import { TodoFormProps } from './TodoForm.types';
 
 export const useTodoForm = (): TodoFormProps => {

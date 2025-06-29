@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TodoItem } from './todos/TodoItem/TodoItem';
-import { useTodoContext } from '../context/TodoContext';
+import { useTodoContext } from '@context/TodoContext';
 
 // Mock the context
-jest.mock('../context/TodoContext', () => ({
+jest.mock('@context/TodoContext', () => ({
   useTodoContext: jest.fn(),
 }));
 

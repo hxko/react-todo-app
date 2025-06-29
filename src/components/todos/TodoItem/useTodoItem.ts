@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ContentEditableEvent } from 'react-contenteditable';
 import { useSwipeable } from 'react-swipeable';
-import { useTodoContext } from "../../../context/TodoContext";
+import { useTodoContext } from "@context/TodoContext";
 import { TodoItemProps, UseTodoItemReturn } from './TodoItem.types';
 
 export const useTodoItem = ({ _id, title, completed }: TodoItemProps): UseTodoItemReturn => {
