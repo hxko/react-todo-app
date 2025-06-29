@@ -1,4 +1,3 @@
-// MainApp.tsx
 import { useState } from 'react';
 import { TodoForm, TodoList, TodoControls } from '../../components/todos';
 import { ToggleDarkMode, ColorPicker } from '../../components';
@@ -12,15 +11,11 @@ export const MainApp = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
-  // Optional: Filtered todos based on search/filter state
-  const filteredTodos = todos.filter(todo => {
-    const matchesSearch = todo.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      filter === 'all'
-      || (filter === 'active' && !todo.completed)
-      || (filter === 'completed' && todo.completed);
-    return matchesSearch && matchesFilter;
-  });
+  // Define the onDrop function
+  const onDrop = (id: string) => {
+    // Implement your logic for handling the drop event
+    console.log(`Dropped item with id: ${id}`);
+  };
 
   return (
     <main>
@@ -41,7 +36,12 @@ export const MainApp = () => {
         setFilter={setFilter}
       />
 
-      <TodoList todos={filteredTodos} />
+      <TodoList
+        todos={todos}
+        searchQuery={searchQuery}
+        filter={filter}
+        onDrop={onDrop} // Pass the onDrop function as a prop
+      />
     </main>
   );
 };
