@@ -1,7 +1,7 @@
 // routes/todoRoutes.js
 import express from 'express';
-import Todo from '@models/Todo.js'; // Ensure to include the .js extension
-import { authenticate } from '@middleware/authMiddleware.js';
+import Todo from '../models/Todo.js'; // Ensure to include the .js extension
+import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

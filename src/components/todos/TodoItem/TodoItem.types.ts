@@ -4,6 +4,7 @@ import { SwipeableHandlers } from 'react-swipeable';
 export interface UseTodoItemReturn {
   // State
   isEditing: boolean;
+  isSwiping: boolean;
   titleRef: React.RefObject<HTMLDivElement>;
   renderCountRef: React.MutableRefObject<number>;
 
@@ -15,7 +16,6 @@ export interface UseTodoItemReturn {
   // Todo actions
   handleToggleCompleted: () => Promise<void>;
   handleDelete: (event: React.MouseEvent) => Promise<void>;
-  handleSwipeDelete: () => Promise<void>;
 
   // Swipe handlers
   swipeHandlers: SwipeableHandlers;

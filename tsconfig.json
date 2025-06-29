@@ -51,7 +51,8 @@
     ]
   },
   "include": [
-    "src"
+    "src",
+    "migrate-backend.cjs"
   ],
   "references": [
     {

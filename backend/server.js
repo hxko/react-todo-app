@@ -12,10 +12,10 @@ import morgan from 'morgan';
 import 'dotenv/config'; // Loads .env file variables into process.env
 
 // Local modules (make sure file extensions are included)
-import connectDB from './config/db.js';
-import { router } from './routes/todoRoutes.js';
+import connectDB from './../backend/config/db.js';
+import { router } from './../backend/routes/todoRoutes.js';
 // Import your service account JSON using an import assertion
-import serviceAccount from './firebase-service-account.json' with { type: 'json' };
+import serviceAccount from './../backend/firebase-service-account.json' with { type: 'json' };
 
 
 // --- INITIALIZATION ---

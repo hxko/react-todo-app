@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ContentEditableEvent } from 'react-contenteditable';
 import { useSwipeable } from 'react-swipeable';
 import { useTodoContext } from "@context/TodoContext";
@@ -7,11 +7,12 @@ import { TodoItemProps, UseTodoItemReturn } from './TodoItem.types';
 export const useTodoItem = ({ _id, title, completed }: TodoItemProps): UseTodoItemReturn => {
   const { updateTodo, deleteTodo } = useTodoContext();
   const [isEditing, setIsEditing] = useState(false);
+  const [isSwiping, setIsSwiping] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
-  const renderCountRef = useRef<number>(0); // Added missing ref
+  const renderCountRef = useRef<number>(0);
 
   useEffect(() => {
-    renderCountRef.current += 1; // Track render count
+    renderCountRef.current += 1;
     if (isEditing && titleRef.current) {
       titleRef.current.focus();
       const range = document.createRange();
@@ -23,46 +24,48 @@ export const useTodoItem = ({ _id, title, completed }: TodoItemProps): UseTodoIt
     }
   }, [isEditing]);
 
-  const handleEditToggle = () => setIsEditing(prev => !prev);
+  const handleEditToggle = useCallback(() => setIsEditing(prev => !prev), []);
+  const cancelEdit = useCallback(() => setIsEditing(false), []);
 
-  const handleTitleChange = (e: ContentEditableEvent) => {
+  const handleTitleChange = useCallback((e: ContentEditableEvent) => {
     const newTitle = e.target.value.trim();
     if (newTitle) {
       updateTodo(_id, newTitle, completed);
     }
-  };
+  }, [_id, completed, updateTodo]);
 
-  const handleToggleCompleted = async () => {
+  const handleToggleCompleted = useCallback(async () => {
     await updateTodo(_id, title, !completed);
-  };
+  }, [_id, title, completed, updateTodo]);
 
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleDelete = useCallback(async (e: React.MouseEvent) => {
+    e?.stopPropagation();
     await deleteTodo(_id);
-  };
-
-  const handleSwipeDelete = async () => {
-    await deleteTodo(_id);
-  };
+  }, [_id, deleteTodo]);
 
   const swipeHandlers = useSwipeable({
-    onSwipedRight: handleSwipeDelete,
+    onSwipedRight: () => {
+      if (window.confirm('Delete this todo?')) {
+        handleDelete(undefined as unknown as React.MouseEvent);
+      }
+    },
+    onSwipeStart: () => setIsSwiping(true),
+    onSwiped: () => setIsSwiping(false),
     trackMouse: true,
-    trackTouch: true,
-    swipeDuration: 250,
-    delta: 30,
+    delta: 50, // Minimum distance to trigger swipe
+    swipeDuration: 300 // Maximum duration for a swipe
   });
 
   return {
     isEditing,
+    isSwiping,
     titleRef,
-    renderCountRef, // Added missing property
+    renderCountRef,
     handleEditToggle,
     handleTitleChange,
-    cancelEdit: () => setIsEditing(false),
+    cancelEdit,
     handleToggleCompleted,
     handleDelete,
-    handleSwipeDelete, // Added missing property
     swipeHandlers
   };
 };
